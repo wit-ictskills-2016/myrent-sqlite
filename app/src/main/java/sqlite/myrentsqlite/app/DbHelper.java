@@ -3,6 +3,7 @@ package sqlite.myrentsqlite.app;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -93,7 +94,7 @@ public class DbHelper extends SQLiteOpenHelper
    *
    * @return A list of Residence object records
    */
-  public List<Residence> selectResidences() {
+  public List<Residence> selectAllResidences() {
     List<Residence> residences = new ArrayList<Residence>();
     String query = "SELECT * FROM " + "tableResidences";
     SQLiteDatabase db = this.getWritableDatabase();
@@ -112,6 +113,30 @@ public class DbHelper extends SQLiteOpenHelper
     }
     cursor.close();
     return residences;
+  }
+
+  /**
+   * Delete all records
+   */
+  public void deleteAllResidences() {
+    SQLiteDatabase db = this.getWritableDatabase();
+    try {
+      db.execSQL("delete from tableResidences");
+    } catch (Exception e) {
+      Log.d(TAG, "delete residences failure: " + e.getMessage());
+    }
+  }
+
+  /**
+   * Queries the database for the number of records.
+   *
+   * @return The number of records in the dataabase.
+   */
+  public long getCount() {
+    SQLiteDatabase db = this.getReadableDatabase();
+    long numberRecords  = DatabaseUtils.queryNumEntries(db, TABLE_RESIDENCES);
+    db.close();
+    return numberRecords;
   }
 
   @Override

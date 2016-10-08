@@ -18,6 +18,9 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
 
   private Button addResidence;
   private Button selectResidence;
+  private Button deleteResidence;
+  private Button selectAllResidences;
+  private Button deleteAllResidences;
 
   MyRentApp app;
   Residence residence;
@@ -35,6 +38,15 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
 
     selectResidence = (Button) findViewById(R.id.selectResidence);
     selectResidence.setOnClickListener(this);
+
+    deleteResidence = (Button) findViewById(R.id.deleteResidence);
+    deleteResidence.setOnClickListener(this);
+
+    selectAllResidences = (Button) findViewById(R.id.selectAllResidences);
+    selectAllResidences.setOnClickListener(this);
+
+    deleteAllResidences = (Button) findViewById(R.id.deleteAllResidences);
+    deleteAllResidences.setOnClickListener(this);
 
   }
 
@@ -55,8 +67,12 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
         deleteResidence();
         break;
 
-      case R.id.selectResidences:
+      case R.id.selectAllResidences:
         selectResidences();
+        break;
+
+      case R.id.deleteAllResidences:
+        deleteAllResidences();
         break;
     }
   }
@@ -104,8 +120,18 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
   }
 
   public void selectResidences() {
-    List<Residence> residences = app.dbHelper.selectResidences();
+    List<Residence> residences = app.dbHelper.selectAllResidences();
     Toast.makeText(this, "Retrieved residence list containing  " + residences.size() + " records", Toast.LENGTH_LONG).show();
   }
 
+  /**
+   * Delete all records.
+   * Count the number of rows in database following deletion -should be zero.
+   * Provide user feed back in a toast.
+   */
+  public void deleteAllResidences() {
+    app.dbHelper.deleteAllResidences();
+    Toast.makeText(this, "Number of records in database " + app.dbHelper.getCount(), Toast.LENGTH_LONG).show();
+
+  }
 }

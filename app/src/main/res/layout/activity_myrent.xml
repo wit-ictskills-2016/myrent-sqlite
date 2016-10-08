@@ -37,11 +37,21 @@
       android:layout_marginTop="42dp"/>
 
   <Button
-      android:id="@+id/selectResidences"
+      android:id="@+id/selectAllResidences"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignBottom="@+id/deleteResidence"
       android:layout_alignEnd="@+id/selectResidence"
       android:text="Select All"/>
+
+
+  <Button
+      android:id="@+id/deleteAllResidences"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="49dp"
+      android:text="Delete All"
+      android:layout_below="@+id/deleteResidence"
+      android:layout_alignParentStart="true"/>
 
 </RelativeLayout>

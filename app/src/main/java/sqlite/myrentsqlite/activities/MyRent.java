@@ -21,6 +21,7 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
   private Button deleteResidence;
   private Button selectAllResidences;
   private Button deleteAllResidences;
+  private Button updateResidence;
 
   MyRentApp app;
   Residence residence;
@@ -48,6 +49,8 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
     deleteAllResidences = (Button) findViewById(R.id.deleteAllResidences);
     deleteAllResidences.setOnClickListener(this);
 
+    updateResidence = (Button) findViewById(R.id.updateResidence);
+    updateResidence.setOnClickListener(this);
   }
 
   @Override
@@ -73,6 +76,10 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
 
       case R.id.deleteAllResidences:
         deleteAllResidences();
+        break;
+
+      case R.id.updateResidence:
+        updateResidence();
         break;
     }
   }
@@ -133,5 +140,32 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
     app.dbHelper.deleteAllResidences();
     Toast.makeText(this, "Number of records in database " + app.dbHelper.getCount(), Toast.LENGTH_LONG).show();
 
+  }
+
+  /**
+   * Update a residence record.
+   * Create and insert a test record.
+   * Make some changes to its fields and update its copy in the database.
+   * Verify and provide toast feedback.
+   */
+  public void updateResidence() {
+    addResidence(); // This initializes the instance variable Residence residence
+    Residence res = app.dbHelper.selectResidence(residence.id);
+    // Makes some distinguishing changes to res fields
+    res.tenant = "Barney Gumble";
+    res.rented = true;
+    res.zoom = 20;
+
+    app.dbHelper.updateResidence(res);
+
+    // Read the updated rrow and verify it's correct.
+    Residence res2 = app.dbHelper.selectResidence(res.id);
+    boolean b = res.zoom == res2.zoom;
+    if (b == true) {
+      Toast.makeText(this, "Update succeeded", Toast.LENGTH_LONG).show();
+    }
+    else {
+      Toast.makeText(this, "Update failed", Toast.LENGTH_LONG).show();
+    }
   }
 }

@@ -165,6 +165,28 @@ public class DbHelper extends SQLiteOpenHelper
     return numberRecords;
   }
 
+  /**
+   * Update an existing Residence record.
+   * All fields except record id updated.
+   *
+   * @param residence The Residence record being updated.
+   */
+  public void updateResidence(Residence residence) {
+    SQLiteDatabase db = this.getWritableDatabase();
+    try {
+      ContentValues values = new ContentValues();
+      values.put(GEOLOCATION, residence.geolocation);
+      values.put(DATE, String.valueOf(residence.date.getTime()));
+      values.put(RENTED, residence.rented == true ? "yes" : "no");
+      values.put(TENANT, residence.tenant);
+      values.put(ZOOM, Double.toString(residence.zoom));
+      values.put(PHOTO, residence.photo);
+      db.update("tableResidences", values, "id" + "=?",  new String[]{residence.id.toString() + ""});
+    } catch (Exception e) {
+      Log.d(TAG, "update residences failure: " + e.getMessage());
+    }
+  }
+
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     db.execSQL("drop table if exists " + TABLE_RESIDENCES);

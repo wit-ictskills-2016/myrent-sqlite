@@ -2,9 +2,13 @@ package sqlite.myrentsqlite.app;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.UUID;
+
 import sqlite.myrentsqlite.models.Residence;
 
 public class DbHelper extends SQLiteOpenHelper
@@ -49,6 +53,28 @@ public class DbHelper extends SQLiteOpenHelper
     // Insert record
     db.insert(TABLE_RESIDENCES, null, values);
     db.close();
+  }
+
+  public Residence selectResidence(UUID resId) {
+    Residence residence;
+    SQLiteDatabase db = this.getReadableDatabase();
+    Cursor cursor = null;
+
+    try {
+      residence = new Residence();
+
+      cursor = db.rawQuery("SELECT * FROM tableResidences WHERE id = ?", new String[]{resId.toString() + ""});
+
+      if (cursor.getCount() > 0) {
+        int columnIndex = 0;
+        cursor.moveToFirst();
+        residence.id = UUID.fromString(cursor.getString(columnIndex++));
+        residence.geolocation = cursor.getString(columnIndex++);
+      }
+    } finally {
+      cursor.close();
+    }
+    return residence;
   }
 
 

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.UUID;
 
 import sqlite.myrentsqlite.R;
@@ -54,6 +55,9 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
         deleteResidence();
         break;
 
+      case R.id.selectResidences:
+        selectResidences();
+        break;
     }
   }
 
@@ -98,5 +102,10 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
       app.dbHelper.deleteResidence(res);
     }
   }
-  
+
+  public void selectResidences() {
+    List<Residence> residences = app.dbHelper.selectResidences();
+    Toast.makeText(this, "Retrieved residence list containing  " + residences.size() + " records", Toast.LENGTH_LONG).show();
+  }
+
 }

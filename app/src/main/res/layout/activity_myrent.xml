@@ -36,4 +36,12 @@
       android:layout_alignParentStart="true"
       android:layout_marginTop="42dp"/>
 
+  <Button
+      android:id="@+id/selectResidences"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignBottom="@+id/deleteResidence"
+      android:layout_alignEnd="@+id/selectResidence"
+      android:text="Select All"/>
+
 </RelativeLayout>

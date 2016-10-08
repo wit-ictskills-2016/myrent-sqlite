@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import sqlite.myrentsqlite.models.Residence;
@@ -84,6 +86,32 @@ public class DbHelper extends SQLiteOpenHelper
     } catch (Exception e) {
       Log.d(TAG, "delete residence failure: " + e.getMessage());
     }
+  }
+
+  /**
+   * Query database and select entire tableResidences.
+   *
+   * @return A list of Residence object records
+   */
+  public List<Residence> selectResidences() {
+    List<Residence> residences = new ArrayList<Residence>();
+    String query = "SELECT * FROM " + "tableResidences";
+    SQLiteDatabase db = this.getWritableDatabase();
+    Cursor cursor = db.rawQuery(query, null);
+    if (cursor.moveToFirst()) {
+      int columnIndex = 0;
+      do {
+        Residence residence = new Residence();
+        residence.id = UUID.fromString(cursor.getString(columnIndex++));
+        residence.geolocation = cursor.getString(columnIndex++);
+
+        columnIndex = 0;
+
+        residences.add(residence);
+      } while (cursor.moveToNext());
+    }
+    cursor.close();
+    return residences;
   }
 
   @Override

@@ -77,6 +77,14 @@ public class DbHelper extends SQLiteOpenHelper
     return residence;
   }
 
+  public void deleteResidence(Residence residence) {
+    SQLiteDatabase db = this.getWritableDatabase();
+    try {
+      db.delete("tableResidences", "id" + "=?", new String[]{residence.id.toString() + ""});
+    } catch (Exception e) {
+      Log.d(TAG, "delete residence failure: " + e.getMessage());
+    }
+  }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)

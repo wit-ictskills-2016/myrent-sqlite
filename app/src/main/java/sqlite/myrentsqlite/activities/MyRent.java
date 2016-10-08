@@ -50,6 +50,9 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
         selectResidence();
         break;
 
+      case R.id.deleteResidence:
+        deleteResidence();
+        break;
 
     }
   }
@@ -83,4 +86,17 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
       Toast.makeText(this, "Failed to select Residence record", Toast.LENGTH_LONG).show();
     }
   }
+
+  public void deleteResidence()
+  {
+    if (residence == null)
+    {
+      addResidence();
+    }
+    else {
+      Residence res = app.dbHelper.selectResidence(residence.id);
+      app.dbHelper.deleteResidence(res);
+    }
+  }
+  
 }

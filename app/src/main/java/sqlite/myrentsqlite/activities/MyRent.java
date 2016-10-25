@@ -71,7 +71,7 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
         break;
 
       case R.id.selectAllResidences:
-        selectResidences();
+        selectAllResidences();
         break;
 
       case R.id.deleteAllResidences:
@@ -126,7 +126,7 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
     }
   }
 
-  public void selectResidences() {
+  public void selectAllResidences() {
     List<Residence> residences = app.dbHelper.selectAllResidences();
     Toast.makeText(this, "Retrieved residence list containing  " + residences.size() + " records", Toast.LENGTH_LONG).show();
   }

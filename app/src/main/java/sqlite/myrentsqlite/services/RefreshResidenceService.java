@@ -43,39 +43,39 @@ public class RefreshResidenceService extends IntentService
     super(name);
   }
 
-  @Override
-  public int onStartCommand(Intent intent, int flags, int startId) {
-    String value = intent.getStringExtra(REFRESH);
-    switch (value) {
-
-      case ADD_RESIDENCE:
-        addResidence(new Residence());
-        break;
-
-      case SELECT_RESIDENCE:
-        selectResidence();
-        break;
-
-      case SELECT_RESIDENCES:
-        selectAllResidences();
-        break;
-
-      case DELETE_RESIDENCE:
-        deleteResidence();
-        break;
-
-      case DELETE_RESIDENCES:
-        deleteAllResidences();
-        break;
-
-      case UPDATE_RESIDENCE:
-        updateResidence();
-        break;
-
-    }
-
-    return START_STICKY;
-  }
+//  @Override
+//  public int onStartCommand(Intent intent, int flags, int startId) {
+//    String value = intent.getStringExtra(REFRESH);
+//    switch (value) {
+//
+//      case ADD_RESIDENCE:
+//        addResidence(new Residence());
+//        break;
+//
+//      case SELECT_RESIDENCE:
+//        selectResidence();
+//        break;
+//
+//      case SELECT_RESIDENCES:
+//        selectAllResidences();
+//        break;
+//
+//      case DELETE_RESIDENCE:
+//        deleteResidence();
+//        break;
+//
+//      case DELETE_RESIDENCES:
+//        deleteAllResidences();
+//        break;
+//
+//      case UPDATE_RESIDENCE:
+//        updateResidence();
+//        break;
+//
+//    }
+//
+//    return START_STICKY;
+//  }
 
   private void addResidence(Residence residence) {
     ContentValues values = new ContentValues();
@@ -257,6 +257,35 @@ public class RefreshResidenceService extends IntentService
   @Override
   protected void onHandleIntent(Intent intent) {
     Log.d(TAG, "onHandleIntent invoked");
+    String value = intent.getStringExtra(REFRESH);
+    switch (value) {
+
+      case ADD_RESIDENCE:
+        addResidence(new Residence());
+        break;
+
+      case SELECT_RESIDENCE:
+        selectResidence();
+        break;
+
+      case SELECT_RESIDENCES:
+        selectAllResidences();
+        break;
+
+      case DELETE_RESIDENCE:
+        deleteResidence();
+        break;
+
+      case DELETE_RESIDENCES:
+        deleteAllResidences();
+        break;
+
+      case UPDATE_RESIDENCE:
+        updateResidence();
+        break;
+
+    }
+
   }
 
 }

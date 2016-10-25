@@ -37,10 +37,46 @@ public class ResidenceProvider extends ContentProvider
     return true;
   }
 
+  /**
+   * Refer to page 195 Learning Android 2nd Edition for more detailed informtion.
+   * Also Android SQLite Database (wish the url not so long).
+   * And Vogella: http://www.vogella.com/tutorials/AndroidSQLite/article.html#base-uri-of-the-content-provider
+   *
+   * @param uri Universal Resource Identifier
+   * @param projection The set of columns to be returned - null to return all
+   * @param selection Filter to specify which rows to return - null to return all
+   * @param selectionArgs Replace ?s in selection by strings
+   * @param sortOrder How to sort rows - null for default sort
+   * @return
+   */
   @Nullable
   @Override
-  public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-    return null;
+  public Cursor query(Uri uri, String[] projection, String selection,
+                      String[] selectionArgs, String sortOrder) {
+    SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+    qb.setTables( ResidenceContract.TABLE_RESIDENCES ); // Specify table
+    switch (uriMatcher.match(uri)) { // Determine uri type
+      case ResidenceContract.RESIDENCE_DIR:
+        break;
+      case ResidenceContract.RESIDENCE_ITEM: // uri contains record id
+        qb.appendWhere(ResidenceContract.Column.ID + "=" + uri.getLastPathSegment());
+        break;
+      default:
+        throw new IllegalArgumentException("Illegal uri: " + uri);
+    }
+
+    String orderBy = (TextUtils.isEmpty(sortOrder))
+        ? ResidenceContract.DEFAULT_SORT
+        : sortOrder; // Specify sort order of returned data
+
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+    Cursor cursor = qb.query(db, projection, selection, selectionArgs,
+        null, null, orderBy);
+
+    // register for uri changes
+    cursor.setNotificationUri(getContext().getContentResolver(), uri); // Cursor data refresh
+    Log.d(TAG, "queried records: " + cursor.getCount());
+    return cursor;
   }
 
   @Nullable

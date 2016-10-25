@@ -60,11 +60,11 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
         break;
 
       case R.id.selectAllResidences:
-        selectResidences();
+        selectAllResidences();
         break;
 
       case R.id.deleteAllResidences:
-        deleteResidences();
+        deleteAllResidences();
         break;
 
       case R.id.updateResidence:
@@ -88,14 +88,19 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
    * Select a single Residence record
    */
   public void selectResidence() {
-
+    Intent intent = new Intent(getBaseContext(), RefreshResidenceService.class);
+    intent.putExtra(RefreshResidenceService.REFRESH, RefreshResidenceService.SELECT_RESIDENCE);
+    startService(intent);
   }
+
 
   /**
    * Select all Residence records
    */
-  public void selectResidences() {
-
+  public void selectAllResidences() {
+    Intent intent = new Intent(getBaseContext(), RefreshResidenceService.class);
+    intent.putExtra(RefreshResidenceService.REFRESH, RefreshResidenceService.SELECT_RESIDENCES);
+    startService(intent);
   }
 
   public void deleteResidence() {
@@ -105,7 +110,7 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
   /**
    * Delete all records.
    */
-  public void deleteResidences() {
+  public void deleteAllResidences() {
 
   }
 

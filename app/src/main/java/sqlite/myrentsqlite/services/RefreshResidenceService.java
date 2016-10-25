@@ -10,6 +10,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
 import sqlite.myrentsqlite.cloud.ResidenceCloud;
 import sqlite.myrentsqlite.models.Residence;
 import sqlite.myrentsqlite.providers.ResidenceContract;
@@ -49,6 +51,14 @@ public class RefreshResidenceService extends IntentService
       case ADD_RESIDENCE:
         addResidence(new Residence());
         break;
+
+      case SELECT_RESIDENCE:
+        selectResidence();
+        break;
+
+      case SELECT_RESIDENCES:
+        selectAllResidences();
+        break;
     }
 
     return START_STICKY;
@@ -67,6 +77,99 @@ public class RefreshResidenceService extends IntentService
 
     Uri uri = getContentResolver().insert(
         ResidenceContract.CONTENT_URI, values);
+  }
+
+  /**
+   * Select a single residence.
+   * To ensure the database is populated
+   * we first create a default Residence object and add it to the database.
+   */
+  private void selectResidence() {
+    Residence residence = ResidenceCloud.residence();
+    addResidence(residence);
+    selectResidence(residence.uuid);
+  }
+
+  /**
+   * Test query method in ResidenceProvider by
+   * obtaining a single residences from simulated cloud,
+   * adding this residence as record to database,
+   * querying database for this record and
+   * checking result
+   * Refer to ResidenceProvider.query for documentation query params
+   */
+  private Residence selectResidence(UUID uuid) {
+    Residence residence = new Residence();
+    String selection = ResidenceContract.Column.UUID + " = ?";
+    String[] selectionArgs = new String[]{uuid + ""};
+
+    // Query database
+    Cursor cursor = getContentResolver().query(ResidenceContract.CONTENT_URI, null, selection, selectionArgs, null);
+
+    if (cursor.getCount() > 0) {
+      int columnIndex = 1; // Skip the 0th column - the _id
+      cursor.moveToFirst();
+
+      residence.uuid = UUID.fromString(cursor.getString(columnIndex++));
+      residence.geolocation = cursor.getString(columnIndex++);
+      residence.date = new Date(Long.parseLong(cursor.getString(columnIndex++)));
+      residence.rented = cursor.getString(columnIndex++) == "yes" ? true : false;
+      residence.tenant = cursor.getString(columnIndex++);
+      residence.zoom = Double.parseDouble(cursor.getString(columnIndex++));
+      residence.photo = cursor.getString(columnIndex++);
+
+    }
+    cursor.close();
+
+    return residence;
+  }
+
+  /**
+   * Test query method in ResidenceProvider by
+   * obtaining a list of residences from simulated cloud,
+   * adding each residence as record to database,
+   * querying database for this list and
+   * checking result
+   */
+  private void selectAllResidences() {
+    populateSampleData();
+
+    // Query the database
+    List<Residence> residences = new ArrayList<Residence>();
+    Cursor cursor = getContentResolver().query(ResidenceContract.CONTENT_URI, null, null, null, null);
+
+    if (cursor.moveToFirst()) {
+      int columnIndex = 1; // skip column 0, the _id
+      do {
+        Residence residence = new Residence();
+
+        residence.uuid = UUID.fromString(cursor.getString(columnIndex++));
+        residence.geolocation = cursor.getString(columnIndex++);
+        residence.date = new Date(Long.parseLong(cursor.getString(columnIndex++)));
+        residence.rented = cursor.getString(columnIndex++) == "yes" ? true : false;
+        residence.tenant = cursor.getString(columnIndex++);
+        residence.zoom = Double.parseDouble(cursor.getString(columnIndex++));
+        residence.photo = cursor.getString(columnIndex++);
+
+        columnIndex = 1;
+
+        residences.add(residence);
+      } while (cursor.moveToNext());
+    }
+    cursor.close();
+
+  }
+
+  /**
+   * Populate database with list sample residences
+   * Used for testing
+   */
+  private List<Residence> populateSampleData() {
+    List<Residence> residenceList = ResidenceCloud.residences();
+    for (Residence residence : residenceList) {
+      addResidence(residence);
+    }
+    return residenceList;
   }
 
   @Override

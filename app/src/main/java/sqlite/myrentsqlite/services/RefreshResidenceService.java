@@ -67,6 +67,11 @@ public class RefreshResidenceService extends IntentService
       case DELETE_RESIDENCES:
         deleteAllResidences();
         break;
+
+      case UPDATE_RESIDENCE:
+        updateResidence();
+        break;
+
     }
 
     return START_STICKY;
@@ -202,6 +207,51 @@ public class RefreshResidenceService extends IntentService
 
     int response = getContentResolver().delete(ResidenceContract.CONTENT_URI, null, null);
     Log.d(TAG, "delete all records response: " + response);
+  }
+
+  /**
+   * Test the update method
+   */
+
+  private void updateResidence() {
+    // Populate database with sample residence
+    Residence residence = ResidenceCloud.residence();
+    addResidence(residence);
+
+    // Modify the residence and update database copy
+    residence.zoom = 40;
+    residence.tenant = "A. N. Other";
+
+    updateResidence(residence);
+
+    Residence residenceUpdated = selectResidence(residence.uuid);
+
+    boolean testResult = residence.zoom == residenceUpdated.zoom &&
+        residence.tenant.equals(residenceUpdated.tenant);
+
+    Log.d(TAG, "update residence attempt: " + testResult);
+  }
+
+
+  /**
+   * Update a residence record
+   */
+  private void updateResidence(Residence residence) {
+    String uuid = residence.uuid.toString();
+    String selection = ResidenceContract.Column.UUID + " = ?";
+    String[] selectionArgs = new String[]{uuid + ""};
+
+    ContentValues values = new ContentValues();
+
+    values.put(ResidenceContract.Column.GEOLOCATION, residence.geolocation);
+    values.put(ResidenceContract.Column.DATE, String.valueOf(residence.date.getTime()));
+    values.put(ResidenceContract.Column.RENTED, residence.rented == true ? "yes" : "no");
+    values.put(ResidenceContract.Column.TENANT, residence.tenant);
+    values.put(ResidenceContract.Column.ZOOM, Double.toString(residence.zoom));
+    values.put(ResidenceContract.Column.PHOTO, residence.photo);
+
+    getContentResolver().update(ResidenceContract.CONTENT_URI, values, selection, selectionArgs);
+
   }
 
   @Override

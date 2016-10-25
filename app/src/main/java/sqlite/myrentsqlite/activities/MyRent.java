@@ -125,7 +125,9 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
    * Update a residence record.
    */
   public void updateResidence() {
-
+    Intent intent = new Intent(getBaseContext(), RefreshResidenceService.class);
+    intent.putExtra(RefreshResidenceService.REFRESH, RefreshResidenceService.UPDATE_RESIDENCE);
+    startService(intent);
   }
 
 }

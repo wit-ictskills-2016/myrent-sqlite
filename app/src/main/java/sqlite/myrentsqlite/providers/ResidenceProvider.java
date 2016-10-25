@@ -136,9 +136,36 @@ public class ResidenceProvider extends ContentProvider
     Log.d(TAG, "deleted records: " + ret);
     return ret;
   }
+
   @Override
-  public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-    return 0;
+  public int update(Uri uri, ContentValues values, String selection,
+                    String[] selectionArgs) {
+    String where;
+    switch (uriMatcher.match(uri)) {
+      case ResidenceContract.RESIDENCE_DIR:
+        // so we count updated rows
+        where = selection;
+        break;
+      case ResidenceContract.RESIDENCE_ITEM:
+        long id = ContentUris.parseId(uri);
+        where = ResidenceContract.Column.ID
+            + "="
+            + id
+            + (TextUtils.isEmpty(selection) ? "" : " and ( "
+            + selection + " )");
+        break;
+      default:
+        throw new IllegalArgumentException("Illegal uri: " + uri);
+    }
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+    int ret = db.update(ResidenceContract.TABLE_RESIDENCES, values,
+        where, selectionArgs);
+    if(ret > 0) {
+      // Notify that data for this URI has changed
+      getContext().getContentResolver().notifyChange(uri, null);
+    }
+    Log.d(TAG, "updated records: " + ret);
+    return ret;
   }
 
 }

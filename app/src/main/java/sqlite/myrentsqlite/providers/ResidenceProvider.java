@@ -19,7 +19,7 @@ import android.util.Log;
  */
 public class ResidenceProvider extends ContentProvider
 {
-  private static final String TAG = ResidenceProvider.class.getSimpleName();
+  private static final String TAG = "ResidenceProvider";
   private DbHelper dbHelper;
 
   private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);

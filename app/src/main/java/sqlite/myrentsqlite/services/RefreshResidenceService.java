@@ -59,6 +59,14 @@ public class RefreshResidenceService extends IntentService
       case SELECT_RESIDENCES:
         selectAllResidences();
         break;
+
+      case DELETE_RESIDENCE:
+        deleteResidence();
+        break;
+
+      case DELETE_RESIDENCES:
+        deleteAllResidences();
+        break;
     }
 
     return START_STICKY;
@@ -170,6 +178,30 @@ public class RefreshResidenceService extends IntentService
       addResidence(residence);
     }
     return residenceList;
+  }
+
+  /**
+   * Add a list of residences to database
+   * Pick on at random from the list and delete it from db
+   */
+  private void deleteResidence() {
+    List<Residence> residenceList = populateSampleData();
+
+    String uuid = residenceList.get(0).uuid.toString(); // Pick the first row (arbitrarily)
+    String selection = ResidenceContract.Column.UUID + " = ?";
+    String[] selectionArgs = new String[]{uuid + ""};
+    int response = getContentResolver().delete(ResidenceContract.CONTENT_URI, selection, selectionArgs);
+    Log.d(TAG, "delete record response: " + response);
+  }
+
+  /**
+   * Delete all Residence records.
+   */
+  private void deleteAllResidences() {
+    List<Residence> residenceList = populateSampleData();
+
+    int response = getContentResolver().delete(ResidenceContract.CONTENT_URI, null, null);
+    Log.d(TAG, "delete all records response: " + response);
   }
 
   @Override

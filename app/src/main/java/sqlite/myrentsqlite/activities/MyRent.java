@@ -103,15 +103,22 @@ public class MyRent extends AppCompatActivity implements View.OnClickListener
     startService(intent);
   }
 
+  /**
+   * Delete a single Residence record
+   */
   public void deleteResidence() {
-
+    Intent intent = new Intent(getBaseContext(), RefreshResidenceService.class);
+    intent.putExtra(RefreshResidenceService.REFRESH, RefreshResidenceService.DELETE_RESIDENCE);
+    startService(intent);
   }
 
   /**
    * Delete all records.
    */
   public void deleteAllResidences() {
-
+    Intent intent = new Intent(getBaseContext(), RefreshResidenceService.class);
+    intent.putExtra(RefreshResidenceService.REFRESH, RefreshResidenceService.DELETE_RESIDENCES);
+    startService(intent);
   }
 
   /**

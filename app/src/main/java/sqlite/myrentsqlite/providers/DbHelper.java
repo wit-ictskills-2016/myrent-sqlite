@@ -1,4 +1,4 @@
-package sqlite.myrentsqlite.app;
+package sqlite.myrentsqlite.providers;
 
 import android.content.ContentValues;
 import android.content.Context;

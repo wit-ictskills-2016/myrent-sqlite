@@ -3,6 +3,8 @@ package sqlite.myrentsqlite.app;
 import android.app.Application;
 import android.util.Log;
 
+import sqlite.myrentsqlite.providers.DbHelper;
+
 public class MyRentApp extends Application
 {
   static final String TAG = "MyRentApp";

@@ -32,9 +32,12 @@ public class RefreshResidenceService extends IntentService
 
   ResidenceCloud cloud = new ResidenceCloud();
 
-//  public RefreshResidenceService() {
-//    super("RefreshResidenceService");
-//  }
+  /**
+   * Zero argument constructor required
+   */
+  public RefreshResidenceService() {
+    super("RefreshResidenceService");
+  }
 
   /**
    * @param name Used to name the worker thread, important only for debugging.

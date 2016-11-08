@@ -88,7 +88,7 @@ public class ResidenceProvider extends ContentProvider
   @Nullable
   @Override
   public Uri insert(Uri uri, ContentValues values) {
-    Uri ret = null;
+    Uri uriReturn = null;
     // Assert correct uri
     if (uriMatcher.match(uri) != ResidenceContract.RESIDENCE_DIR) {
       throw new IllegalArgumentException("Illegal uri: " + uri);
@@ -97,15 +97,12 @@ public class ResidenceProvider extends ContentProvider
     long rowId = db.insertWithOnConflict(ResidenceContract.TABLE_RESIDENCES, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     // Was insert successful?
     if (rowId != -1) {
-      //Integer id = values.getAsInteger(ResidenceContract.Column.ID);
-      //ret = ContentUris.withAppendedId(uri, id);
-      ret = ContentUris.withAppendedId(uri, rowId);
-      Log.d(TAG, "inserted uri: " + ret);
+      uriReturn = ContentUris.withAppendedId(uri, rowId);
+      Log.d(TAG, "inserted uri: " + uriReturn);
       // Notify that data for this uri has changed
-      getContext().getContentResolver()
-          .notifyChange(uri, null);
+      getContext().getContentResolver().notifyChange(uri, null);
     }
-    return ret;
+    return uriReturn;
   }
 
   @Override
